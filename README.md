@@ -1,7 +1,7 @@
 # Predicting Car Accident Severity
 AI project for Hanyang ITE3051
 
-Gavin Pryor <br>
+Gavin Pryor, Department of Financial Management, gavinpryor33@hanyang.ac.kr <br>
 Randy Fu, Department of Computer Science, randyfu333@hanyang.ac.kr <br>
 Fatima Zahra El Bajdali,Department of Computer Science, bfz2005@hanyang.ac.kr <br>
 Marwa Errahmani <br>
