@@ -1,0 +1,11 @@
+{
+  "model_name": "Attention-Based Neural Network",
+  "accuracy": 0.6124,
+  "f1_score": 0.6056,
+  "key_features": [
+    "Custom attention mechanism",
+    "87% recall on Minor accidents",
+    "75% precision on Severe accidents",
+    "Cross-validated (5-fold)"
+  ]
+}

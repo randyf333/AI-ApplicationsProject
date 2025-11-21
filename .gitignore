@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data files (TOO LARGE for GitHub)
+*.csv
+US_Accidents_March23.csv
+data/*.csv
+
+# Mac
+.DS_Store
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Virtual environment
+venv/

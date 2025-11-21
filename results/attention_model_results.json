@@ -1,0 +1,84 @@
+{
+  "model_name": "Attention-Based Neural Network",
+  "timestamp": "2025-11-21 09:07:58",
+  "dataset_info": {
+    "total_samples": 99461,
+    "train_samples": 79568,
+    "test_samples": 19893,
+    "num_features": 23,
+    "num_classes": 3
+  },
+  "training_info": {
+    "epochs_trained": 29,
+    "final_train_loss": 0.7597088813781738,
+    "final_val_loss": 0.8026807904243469,
+    "final_train_acc": 0.6160807013511658,
+    "final_val_acc": 0.6014201045036316,
+    "best_val_acc": 0.6065099835395813
+  },
+  "test_metrics": {
+    "accuracy": 0.6123762127381491,
+    "precision_macro": 0.6015191765156622,
+    "recall_macro": 0.6400835954615793,
+    "f1_macro": 0.6056467833127273,
+    "per_class_metrics": {
+      "Minor": {
+        "precision": 0.5951686797167847,
+        "recall": 0.8722278738555442,
+        "f1": 0.707542498762172,
+        "support": 4915
+      },
+      "Moderate": {
+        "precision": 0.46202190698509604,
+        "recall": 0.5147029405881176,
+        "f1": 0.4869417108251325,
+        "support": 4999
+      },
+      "Severe": {
+        "precision": 0.7473669428451061,
+        "recall": 0.5333199719410763,
+        "f1": 0.6224561403508772,
+        "support": 9979
+      }
+    },
+    "confusion_matrix": [
+      [
+        4287,
+        215,
+        413
+      ],
+      [
+        1040,
+        2573,
+        1386
+      ],
+      [
+        1876,
+        2781,
+        5322
+      ]
+    ]
+  },
+  "class_weights": {
+    "0": 1.3489988640794806,
+    "1": 1.326597642508211,
+    "2": 0.6644953316296704
+  },
+  "architecture": {
+    "attention_dim": 64,
+    "hidden_layers": [
+      128,
+      64,
+      32
+    ],
+    "dropout_rates": [
+      0.3,
+      0.3,
+      0.2
+    ],
+    "activation": "relu",
+    "output_activation": "softmax",
+    "optimizer": "Adam",
+    "learning_rate": 0.001
+  }
+}
