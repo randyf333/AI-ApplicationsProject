@@ -34,7 +34,7 @@ Following our processing the data, we use four broad groups of features to predi
 
 4. Spatial density and contextual features, summarizing patterns of nearby accidents and the severity of past incidents in the same area, such as local accident density within small spatial grids
 
-These groups together give the model information about time, weather, road design, and spatial context that help it predict how severe each accident is likely to be. The original dataset, along with the full list of original features and their descriptions, can be found here [https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents].
+These groups together give the model information about time, weather, road design, and spatial context that help it predict how severe each accident is likely to be. The original dataset, along with the full list of original features and their descriptions, can be found [here](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents).
 
 # Methodology
 
