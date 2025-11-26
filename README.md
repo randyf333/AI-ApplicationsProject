@@ -17,8 +17,28 @@ This project aims to develop and evaluate a machine-learning pipeline capable of
 An additional objective of this project is to understand which factors contribute most to accident severity. After training, we conduct interpretability analyses, such as feature-importance evaluations and model-behavior visualizations, to identify the signals that most strongly shape the model’s predictions. Finally, the project includes a short demonstration video and a clear, structured technical blog that explain the model, methods, and findings, as well as a simple concept for how such a predictive system could be integrated into real-world warning or safety applications.
 
 # Dataset
-The original dataset can be found at the following link: https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
+The dataset we are using for this project is the US Accidents (2016 - 2023) dataset found on Kaggle. This dataset contains around 7.7 million accident records across 49 US states from February 2016 to March 2023, using multiple APIs that provide streaming traffic incident data. These APIs broadcast traffic data captured by various entities, including the US and state departments of transportation, law enforcement agencies, traffic cameras, and traffic sensors within the road networks.
 
+Our target feature and what we are predicting is Severity, which is a categorical variable with possible values of 1 (least severe), 2, 3, or 4 (most severe). In this case a "severe" accident is one that causes a longer traffic delay, with heavy congestion and long backups.
+
+Following our processing the data, we use four broad groups of features to predict severity:
+1. Time and location features
+These capture when and where the accident occurred. Examples include time of the accident, geographic coordinates of the crash location, and a spatial grid cells representing the area surrounding the crash.
+
+2. Weather and environmental features
+These describe the driving conditions at the time of the incident. Examples are:
++ Temperature, humidity, and air pressure
++ Visibility and wind conditions
++ Rain, snow, or other forms of precipitation
++ Indicators for clean weather, windy weather, thunderstorms, or weather intensity
+
+3. Roadway and infrastructure features
+These represent characteristics of the road and nearby traffic elements, such as the presence of a crossing, junction, bump, or roundabout or, whether there is a stop sign or traffic signal
+
+4. Spatial density and contextual features
+These summarize patterns of nearby accidents and the severity of past incidents in the same area, such as local accident density within small spatial grids
+
+These groups together give the model information about time, weather, road design, and spatial context that help it predict how severe each accident is likely to be. The original dataset, along with the full list of original features and their descriptions, can be found here[https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents].
 
 # Methodology
 
