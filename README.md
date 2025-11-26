@@ -44,3 +44,7 @@ To process the data, we had to drop unnecessary columns, including leaky variabl
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
 
 # Evaluation & Analysis
+
+# Related Work
+
+# Conclusion
