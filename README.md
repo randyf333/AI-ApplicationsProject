@@ -16,7 +16,7 @@ This project aims to develop and evaluate a machine learning pipeline capable of
 
 An additional objective of this project is to understand which factors contribute most to accident severity. After training, we conduct interpretability analyses, such as feature-importance evaluations and model-behavior visualizations, to identify the signals that most strongly shape the model’s predictions. Finally, the project includes a short demonstration video and a clear, structured technical blog that explain the model, methods, and findings, as well as a simple concept for how such a predictive system could be integrated into real-world warning or safety applications.
 
-# Datset
+# Dataset
 The original dataset can be found at the following link: https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents
 
 
