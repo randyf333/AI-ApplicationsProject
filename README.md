@@ -22,21 +22,17 @@ The dataset we are using for this project is the US Accidents (2016 - 2023) data
 Our target feature and what we are predicting is Severity, which is a categorical variable with possible values of 1 (least severe), 2, 3, or 4 (most severe). In this case a "severe" accident is one that causes a longer traffic delay, with heavy congestion and long backups.
 
 Following our processing the data, we use four broad groups of features to predict severity:
-1. Time and location features
-These capture when and where the accident occurred. Examples include time of the accident, geographic coordinates of the crash location, and a spatial grid cells representing the area surrounding the crash.
+1. Time and location features that capture when and where the accident occurred. Examples include time of the accident, geographic coordinates of the crash location, and a spatial grid cells representing the area surrounding the crash.
 
-2. Weather and environmental features
-These describe the driving conditions at the time of the incident. Examples are:
+2. Weather and environmental features, which describe the driving conditions at the time of the incident. Examples are:
 + Temperature, humidity, and air pressure
 + Visibility and wind conditions
 + Rain, snow, or other forms of precipitation
 + Indicators for clean weather, windy weather, thunderstorms, or weather intensity
 
-3. Roadway and infrastructure features
-These represent characteristics of the road and nearby traffic elements, such as the presence of a crossing, junction, bump, or roundabout or, whether there is a stop sign or traffic signal
+3. Roadway and infrastructure features, representing characteristics of the road and nearby traffic elements, such as the presence of a crossing, junction, bump, or roundabout or, whether there is a stop sign or traffic signal
 
-4. Spatial density and contextual features
-These summarize patterns of nearby accidents and the severity of past incidents in the same area, such as local accident density within small spatial grids
+4. Spatial density and contextual features, summarizing patterns of nearby accidents and the severity of past incidents in the same area, such as local accident density within small spatial grids
 
 These groups together give the model information about time, weather, road design, and spatial context that help it predict how severe each accident is likely to be. The original dataset, along with the full list of original features and their descriptions, can be found here[https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents].
 
