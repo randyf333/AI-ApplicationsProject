@@ -44,6 +44,8 @@ To process the data, we had to drop unnecessary columns, including leaky variabl
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
 
 # Evaluation & Analysis
+Looking at the initial results of our three models, **XGBoost** had the highest accuracy at 0.71 compared to **Random Forest** with 0.55508 and **Attention Based Neural Network** with 0.6124. These results were not unexpected, as XGBoost excels at structued and tabular data compared to Random Forest and an Attention Based Neural Network. Given these results, we decided to focus on improving our XGBoost model's performance. 
+
 
 # Related Work
 
