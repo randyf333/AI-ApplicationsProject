@@ -43,8 +43,8 @@ To process the data, we had to drop unnecessary columns, including leaky variabl
 ### Modeling
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
 
-# Evaluation & Analysis
-- XGBoost Results: 
+# Evaluation & Analysis: 
+Performance Summary: 
 
 | Model          | Accuracy |
 |----------------|----------|
@@ -52,18 +52,22 @@ To predict Severity, we tested 3 different models and compared performance for e
 | Attention NN   | 0.6124   |
 | Random Forest  | 0.555    |
 
+1. XGBoost Results:
 
-Overall Metrics:
+   
+2. Attention Neural Network Results:
+      Overall Metrics:
 
-      Accuracy: 0.6124
-      
-      Macro Precision: 0.6015
-      
-      Macro Recall: 0.6401
-      
-      Macro F1: 0.6056
+            Accuracy: 0.6124
+            
+            Macro Precision: 0.6015
+            
+            Macro Recall: 0.6401
+            
+            Macro F1: 0.6056
 
-- Random Forest Results: 
+
+3. Random Forest Results: 
 
 
 
