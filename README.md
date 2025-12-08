@@ -46,16 +46,15 @@ To predict Severity, we tested 3 different models and compared performance for e
 # Evaluation & Analysis
 
 
+### Attention Neural Network Results:
 
-Attention Neural Network Results:
+- Overall Metrics:
+- Accuracy: 0.6124
+- Macro Precision: 0.6015
+- Macro Recall: 0.6401
+- Macro F1: 0.6056
 
-Overall Metrics:
-Accuracy: 0.6124
-Macro Precision: 0.6015
-Macro Recall: 0.6401
-Macro F1: 0.6056
-
-Random Forest Results: 
+### Random Forest Results: 
 
 
 Looking at the initial results of our three models, **XGBoost** had the highest accuracy at 0.71 compared to **Random Forest** with 0.55508 and **Attention Based Neural Network** with 0.6124. These results were not unexpected, as XGBoost excels at structued and tabular data compared to Random Forest and an Attention Based Neural Network. Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
@@ -64,10 +63,10 @@ Looking at the initial results of our three models, **XGBoost** had the highest 
 # Related Work
 We referenced the following sources:
 
-### **Datasets & Documentation:**
+### Datasets & Documentation:
   - US Accidents (2016–2023) — Kaggle
   
-### **Methods & Technical Resources:**
+### Methods & Technical Resources:
 
 - XGBoost official documentation
 - Scikit-learn documentation
@@ -75,7 +74,7 @@ We referenced the following sources:
 - Blog posts/tutorials on:
   Attention mechanisms for tabular data
 
-### **Tools Utilized**
+### Tools Utilized
 - Python 3.10+
 - Pandas, NumPy, Matplotlib, Seaborn
 - scikit-learn
