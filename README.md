@@ -46,29 +46,22 @@ To predict Severity, we tested 3 different models and compared performance for e
 # Evaluation & Analysi
 - XGBoost Results: 
 
-- Attention Neural Network Results:
+| Model          | Accuracy |
+|----------------|----------|
+| XGBoost        | 0.71     |
+| Attention NN   | 0.6124   |
+| Random Forest  | 0.555    |
 
-Performance summary:
-  
-| Model             | Accuracy | 
-
-| ----------------- | -------- | 
-
-| **XGBoost**       | **0.71** | 
-
-| **Attention NN**  | 0.6124   | 
-
-| **Random Forest** | 0.555    |
 
 Overall Metrics:
 
-Accuracy: 0.6124
-
-Macro Precision: 0.6015
-
-Macro Recall: 0.6401
-
-Macro F1: 0.6056
+      Accuracy: 0.6124
+      
+      Macro Precision: 0.6015
+      
+      Macro Recall: 0.6401
+      
+      Macro F1: 0.6056
 
 - Random Forest Results: 
 
@@ -81,34 +74,34 @@ We referenced the following sources:
 
 - Datasets & Documentation:
 
-  US Accidents (2016–2023) — Kaggle
+    US Accidents (2016–2023) — Kaggle
   
 - Methods & Technical Resources:
 
-XGBoost official documentation
-
-Scikit-learn documentation
-
-TensorFlow/Keras guides for custom layers
-
-Blog posts/tutorials on:
-
-Attention mechanisms for tabular data
+    XGBoost official documentation
+    
+    Scikit-learn documentation
+    
+    TensorFlow/Keras guides for custom layers
+    
+    Blog posts/tutorials on:
+    
+    Attention mechanisms for tabular data
 
 - Tools Utilized
 
-Python 3.10+
-
-Pandas, NumPy, Matplotlib, Seaborn
-
-scikit-learn
-
-TensorFlow / Keras
-
-XGBoost
-
-Weights & Biases 
-
-PyTorch
+    Python 3.10+
+    
+    Pandas, NumPy, Matplotlib, Seaborn
+    
+    scikit-learn
+    
+    TensorFlow / Keras
+    
+    XGBoost
+    
+    Weights & Biases 
+    
+    PyTorch
 
 # Conclusion
