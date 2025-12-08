@@ -44,9 +44,15 @@ To process the data, we had to drop unnecessary columns, including leaky variabl
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
 
 # Evaluation & Analysis
-
+* XGBoost Results: 
 
 ### Attention Neural Network Results:
+* Performance summary:
+| Model             | Accuracy | 
+| ----------------- | -------- | 
+| **XGBoost**       | **0.71** | 
+| **Attention NN**  | 0.6124   | 
+| **Random Forest** | 0.555    |
 
 - Overall Metrics:
 - Accuracy: 0.6124
@@ -80,7 +86,7 @@ We referenced the following sources:
 - scikit-learn
 - TensorFlow / Keras
 - XGBoost
-- Weights & Biases (hyperparameter sweep)
+- Weights & Biases 
 - PyTorch
 
 # Conclusion
