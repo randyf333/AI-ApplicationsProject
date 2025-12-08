@@ -64,24 +64,24 @@ Looking at the initial results of our three models, **XGBoost** had the highest 
 # Related Work
 We referenced the following sources:
 
-**Datasets & Documentation:**
-  US Accidents (2016–2023) — Kaggle
+### **Datasets & Documentation:**
+  - US Accidents (2016–2023) — Kaggle
   
-**Methods & Technical Resources:**
+### **Methods & Technical Resources:**
 
-XGBoost official documentation
-Scikit-learn documentation
-TensorFlow/Keras guides for custom layers
-Blog posts/tutorials on:
+- XGBoost official documentation
+- Scikit-learn documentation
+- TensorFlow/Keras guides for custom layers
+- Blog posts/tutorials on:
   Attention mechanisms for tabular data
 
-**Tools Utilized**
-Python 3.10+
-Pandas, NumPy, Matplotlib, Seaborn
-scikit-learn
-TensorFlow / Keras
-XGBoost
-Weights & Biases (hyperparameter sweep)
-PyTorch
+### **Tools Utilized**
+- Python 3.10+
+- Pandas, NumPy, Matplotlib, Seaborn
+- scikit-learn
+- TensorFlow / Keras
+- XGBoost
+- Weights & Biases (hyperparameter sweep)
+- PyTorch
 
 # Conclusion
