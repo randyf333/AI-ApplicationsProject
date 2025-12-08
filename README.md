@@ -43,7 +43,7 @@ To process the data, we had to drop unnecessary columns, including leaky variabl
 ### Modeling
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
 
-# Evaluation & Analysi
+# Evaluation & Analysis
 - XGBoost Results: 
 
 | Model          | Accuracy |
@@ -64,6 +64,8 @@ Overall Metrics:
       Macro F1: 0.6056
 
 - Random Forest Results: 
+
+
 
 
 Looking at the initial results of our three models, **XGBoost** had the highest accuracy at 0.71 compared to **Random Forest** with 0.55508 and **Attention Based Neural Network** with 0.6124. These results were not unexpected, as XGBoost excels at structued and tabular data compared to Random Forest and an Attention Based Neural Network. Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
@@ -105,3 +107,10 @@ We referenced the following sources:
     PyTorch
 
 # Conclusion
+Through this project, we were able to explore how different environmental, temporal, and spatial factors contribute to the severity of car accidents. By testing multiple machine learning models, we gained a better understanding of what types of algorithms work best for this kind of structured, real world data.
+
+Overall, XGBoost performed the best, reaching about 71% accuracy, which makes sense because boosted tree models are known to handle tabular and mixed type features very well. Our attention based neural network did not reach the same level of accuracy, but it was still useful because it helped us interpret which features the model considered important. The Random Forest served as a good baseline but showed lower performance compared to the other two.
+
+From the results, we found that weather conditions, visibility, and local accident density played a big role in predicting severity. Features related to road infrastructure and time of day also contributed, but to a smaller degree. One of the challenges we faced was the moderate severity class, which was harder to predict correctly due to overlapping patterns with the other classes.
+
+
