@@ -65,7 +65,124 @@ cleaned = data.drop(columns={
     'Astronomical_Twilight'
 })
 ```
-Using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, we condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling.
+Using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. 
+```
+#Create GeoDataFrame from latitude and longitude for start locations
+gdf = gpd.GeoDataFrame(cleaned, geometry=gpd.points_from_xy(cleaned.Start_Lng, cleaned.Start_Lat),crs="EPSG:4326")
+gdf = gdf.to_crs(epsg=5070) # Convert to a projected coordinate system for accurate distance calculations
+gdf["x"] = gdf.geometry.x
+gdf["y"] = gdf.geometry.y
+
+print("Data frame created")
+
+#Multi-scale grid / tile IDs
+'''
+grid tiles produce compact neighborhood identifiers that capture local context and 
+let you compute cell-level aggregates (counts, mean severity). Multi-scale tiles 
+(fine + coarse) allow the model to see both micro and macro spatial structure
+'''
+def tile_id(x, y, scale):
+    tile_x = (x // scale).astype(int)
+    tile_y = (y // scale).astype(int)
+    return tile_x.astype(str) + "_" + tile_y.astype(str)
+
+gdf["cell_1km"] = tile_id(gdf["x"], gdf["y"], 1000)
+gdf["cell_5km"] = tile_id(gdf["x"], gdf["y"], 5000)
+
+print("Grid cells computed")
+
+#KDE density (projected coords)
+'''Gives measure of local accident concentration or density'''
+import scipy.ndimage as ndi
+
+# Fast gridded KDE (recommended)
+bandwidth = 1000.0      # same units as projected coords (meters)
+grid_size = 500.0       # cell size for histogram in meters (tweak for resolution/perf)
+
+xs = gdf["x"].values
+ys = gdf["y"].values
+
+# define grid bounds with padding to avoid edge effects
+pad = bandwidth * 3
+xmin, xmax = xs.min() - pad, xs.max() + pad
+ymin, ymax = ys.min() - pad, ys.max() + pad
+
+nx = int(np.ceil((xmax - xmin) / grid_size))
+ny = int(np.ceil((ymax - ymin) / grid_size))
+
+H, xedges, yedges = np.histogram2d(xs, ys, bins=[nx, ny], range=[[xmin, xmax], [ymin, ymax]])
+
+# smooth counts with gaussian filter (sigma in pixels = bandwidth / grid_size)
+sigma = bandwidth / grid_size
+H_smooth = ndi.gaussian_filter(H, sigma=sigma, mode="constant")
+
+# map each point to its grid cell and assign smoothed density
+ix = np.minimum(np.maximum(((xs - xmin) / grid_size).astype(int), 0), H_smooth.shape[0]-1)
+iy = np.minimum(np.maximum(((ys - ymin) / grid_size).astype(int), 0), H_smooth.shape[1]-1)
+
+# add per-point grid indices and an id for the KDE grid cell
+gdf["kde_ix"] = ix
+gdf["kde_iy"] = iy
+gdf["kde_cell_kdegrid"] = [f"{i}_{j}" for i, j in zip(ix, iy)]
+
+kde_vals = H_smooth[ix, iy]
+
+# optional: convert counts -> density per square meter (makes values comparable)
+cell_area = grid_size * grid_size
+kde_density = kde_vals / (cell_area)
+
+gdf["kde_1km"] = kde_density
+gdf["kde_density_m2"] = kde_density
+
+# build a DataFrame with one row per KDE-grid cell (counts, density, center coords)
+gi, gj = np.indices(H_smooth.shape)       # gi.shape == gj.shape == H_smooth.shape
+gi_f = gi.ravel()
+gj_f = gj.ravel()
+counts_f = H_smooth.ravel()
+x_centers = xmin + (gi_f + 0.5) * grid_size
+y_centers = ymin + (gj_f + 0.5) * grid_size
+
+kde_grid_df = pd.DataFrame({
+    "kde_cell_kdegrid": [f"{i}_{j}" for i, j in zip(gi_f, gj_f)],
+    "kde_grid_count": counts_f,
+    "kde_grid_density_m2": counts_f / (cell_area),
+    "kde_grid_x": x_centers,
+    "kde_grid_y": y_centers
+})
+
+# merge grid-level statistics back to points (so each point gets its grid's aggregate values)
+gdf = gdf.merge(
+    kde_grid_df[["kde_cell_kdegrid", "kde_grid_count", "kde_grid_density_m2", "kde_grid_x", "kde_grid_y"]],
+    on="kde_cell_kdegrid",
+    how="left"
+)
+
+print("Gridded KDE computed (fast) and KDE-grid attributes merged into gdf")
+
+#Simple cell-level aggregates. Compute count and mean severity per 1km cell
+cell_stats = gdf.groupby("cell_1km").agg(cell1_count=("ID","count"), 
+                                         cell1_mean_sev=("Severity","mean")).reset_index()
+gdf = gdf.merge(cell_stats, on="cell_1km", how="left")
+
+print("Cell-level aggregates computed")
+'''
+geometry: shapely Point for each accident (original lat/lng converted to projected coords).
+x, y: projected coordinates (meters) extracted from geometry.
+cell_1km / cell_5km: coarse grid tile IDs (string "tilex_tiley") at 1 km and 5 km scales.
+kde_ix / kde_iy: integer array indices of the KDE histogram cell (grid column/row) each point falls in.
+kde_cell_kdegrid: string id for the KDE cell ("ix_iy") — links points to the gridded KDE row.
+kde_1km / kde_density_m2: per-point smoothed KDE density (converted to density per m^2) assigned from the gridded KDE.
+kde_grid_count: count (smoothed) for each KDE grid cell (one row per cell in kde_grid_df).
+kde_grid_density_m2: per-cell density (counts / cell_area) for each KDE grid cell.
+kde_grid_x / kde_grid_y: center coordinates (projected, meters) of each KDE grid cell.
+cell1_count: per-1km-cell raw count (groupby on cell_1km).
+cell1_mean_sev: per-1km-cell mean Severity.
+
+'''
+
+```
+
+We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, we condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling.
 
 ### Modeling
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
