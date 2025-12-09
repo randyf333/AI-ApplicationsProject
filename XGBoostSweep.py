@@ -360,7 +360,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y_enc, test_size=0.3, random_state=1, stratify=y_enc)
 
 import wandb
-wandb.login("b48322a7f66eeb2bdc68eabd3bf355f8884ed184")
+wandb.login()
 wandb.init(project="xgboost-accident-severity", entity="randyf333-hanyang")
 sweep_config = {
     'method': 'bayes',

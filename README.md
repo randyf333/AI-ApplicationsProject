@@ -38,7 +38,34 @@ These groups together give the model information about time, weather, road desig
 
 # Methodology
 ### Data Processing
-To process the data, we had to drop unnecessary columns, including leaky variables and redundant time or location fields, so we could focus on the timestamp and our feature-engineered spatial variables derived from latitude and longitude. Using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, we condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling.
+To process the data, we had to drop unnecessary columns, including leaky variables and redundant time or location fields, so we could focus on the timestamp and our feature-engineered spatial variables derived from latitude and longitude. 
+```
+# drop unnessecary columns
+cleaned = data.drop(columns={
+    #'ID',
+    'Source',
+    'End_Lat',
+    'End_Lng',
+    'End_Time',
+    'Distance(mi)',
+    'Description',
+    'Street',
+    'City',
+    'Country',
+    'County',
+    'State',
+    'Zipcode',
+    'Country',
+    'Timezone',
+    'Airport_Code',
+    'Weather_Timestamp',
+    'Amenity',
+    'Civil_Twilight',
+    'Nautical_Twilight',
+    'Astronomical_Twilight'
+})
+```
+Using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, we condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling.
 
 ### Modeling
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
@@ -84,10 +111,15 @@ Looking at the initial results of our three models, **XGBoost** had the highest 
 
 ![f1-weighted graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154023.png)
 ![f1-macro graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154119.png)
-![accuracy graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154137.png)
 ![raw f1-score graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154058.png)
 
-This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
+We evaluated off of f1 score because of the nature of our data. We chose to evaluate our model using the F1 score because it provides a balanced measure of precision and recall. Unlike accuracy, which can be misleading in cases of uneven error types, the F1 score ensures that the model performs well both in correctly identifying positive cases (recall) and in minimizing false positives (precision). This makes it a more robust metric for assessing overall classification performance, especially when both types of errors carry meaningful consequences.
+
+The parameter importance for f1-macro is show below. The most important parameters are listed at the top, and the correlation is listed as either positive(green) or negative(red) respectively:
+
+![f1-macro parameter importance](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154949.png)
+
+Our results tell us that our current features may not carry enough predictive power to increase our prediction accuracy. More feature engineering or more data may be required to improve the performance of our model.
 
 
 # Related Work
