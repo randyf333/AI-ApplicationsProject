@@ -80,7 +80,14 @@ Performance Summary:
 
 
 
-Looking at the initial results of our three models, **XGBoost** had the highest accuracy at 0.71 compared to **Random Forest** with 0.55508 and **Attention Based Neural Network** with 0.6124. These results were not unexpected, as XGBoost excels at structued and tabular data compared to Random Forest and an Attention Based Neural Network. Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
+Looking at the initial results of our three models, **XGBoost** had the highest accuracy at 0.71 compared to **Random Forest** with 0.55508 and **Attention Based Neural Network** with 0.6124. These results were not unexpected, as XGBoost excels at structued and tabular data compared to Random Forest and an Attention Based Neural Network. Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. The results of our sweeps are shown in the following graphs:
+
+![f1-weighted graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154023.png)
+![f1-macro graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154119.png)
+![accuracy graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154137.png)
+![raw f1-score graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154058.png)
+
+This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
 
 
 # Related Work
