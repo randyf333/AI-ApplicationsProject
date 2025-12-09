@@ -1,4 +1,4 @@
-# Predicting Car Accident Severity
+<img width="1497" height="608" alt="image" src="https://github.com/user-attachments/assets/853c513f-e348-4a46-9382-76288a618b36" /># Predicting Car Accident Severity
 AI project for Hanyang ITE3051
 
 Gavin Pryor, Department of Financial Management, gavin.anaiah@gmail.com <br>
@@ -86,6 +86,9 @@ Looking at the initial results of our three models, **XGBoost** had the highest 
 ![f1-macro graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154119.png)
 ![accuracy graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154137.png)
 ![raw f1-score graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154058.png)
+
+The paramter importance for f1-macro is show below. The most important parameters are listed at the top, and the correlation is listed as either positive(green) or negative(red) respectively:
+![f1-macro parameter importance](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154949.png)
 
 This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
 
