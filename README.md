@@ -43,10 +43,98 @@ To process the data, we had to drop unnecessary columns, including leaky variabl
 ### Modeling
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
 
-# Evaluation & Analysis
-Looking at the initial results of our three models, **XGBoost** had the highest accuracy at 0.71 compared to **Random Forest** with 0.55508 and **Attention Based Neural Network** with 0.6124. These results were not unexpected, as XGBoost excels at structued and tabular data compared to Random Forest and an Attention Based Neural Network. Given these results, we decided to focus on improving our XGBoost model's performance. 
+# Evaluation & Analysis: 
+Notes
++ evaluation metrics of final model and real-world interpretation metrics (what do they tell us?)
++ feature importance comparison of 3 initial models (maybe move the comparison ones up to other section)
++ feature importance of final model
++ runtime comparison of 3 initial models
++ runtime of final model
++ decision threshold discussion and real-world interpretation
+
+Performance Summary: 
+
+| Model          | Accuracy |
+|----------------|----------|
+| XGBoost        | 0.71     |
+| Attention NN   | 0.6124   |
+| Random Forest  | 0.555    |
+
+1. XGBoost Results:
+
+   
+2. Attention Neural Network Results:
+      Overall Metrics:
+
+            Accuracy: 0.6124
+            
+            Macro Precision: 0.6015
+            
+            Macro Recall: 0.6401
+            
+            Macro F1: 0.6056
+
+
+3. Random Forest Results: 
+
+
+
+
+Looking at the initial results of our three models, **XGBoost** had the highest accuracy at 0.71 compared to **Random Forest** with 0.55508 and **Attention Based Neural Network** with 0.6124. These results were not unexpected, as XGBoost excels at structued and tabular data compared to Random Forest and an Attention Based Neural Network. Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. The results of our sweeps are shown in the following graphs:
+
+![f1-weighted graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154023.png)
+![f1-macro graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154119.png)
+![accuracy graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154137.png)
+![raw f1-score graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154058.png)
+
+This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
 
 
 # Related Work
+We referenced the following sources:
+
+- Datasets & Documentation:
+
+    US Accidents (2016–2023) — Kaggle
+  
+- Methods & Technical Resources:
+
+    XGBoost official documentation
+    
+    Scikit-learn documentation
+    
+    TensorFlow/Keras guides for custom layers
+    
+    Blog posts/tutorials on:
+    
+    Attention mechanisms for tabular data
+
+- Tools Utilized
+
+    Python 3.10+
+    
+    Pandas, NumPy, Matplotlib, Seaborn
+    
+    scikit-learn
+    
+    TensorFlow / Keras
+    
+    XGBoost
+    
+    Weights & Biases 
+    
+    PyTorch
 
 # Conclusion
+Notes
++ summary and wrap up
++ real world impact and applications
++ deployment feasability
+
+Through this project, we were able to explore how different environmental, temporal, and spatial factors contribute to the severity of car accidents. By testing multiple machine learning models, we gained a better understanding of what types of algorithms work best for this kind of structured, real world data.
+
+Overall, XGBoost performed the best, reaching about 71% accuracy, which makes sense because boosted tree models are known to handle tabular and mixed type features very well. Our attention based neural network did not reach the same level of accuracy, but it was still useful because it helped us interpret which features the model considered important. The Random Forest served as a good baseline but showed lower performance compared to the other two.
+
+From the results, we found that weather conditions, visibility, and local accident density played a big role in predicting severity. Features related to road infrastructure and time of day also contributed, but to a smaller degree. One of the challenges we faced was the moderate severity class, which was harder to predict correctly due to overlapping patterns with the other classes.
+
+
