@@ -38,7 +38,34 @@ These groups together give the model information about time, weather, road desig
 
 # Methodology
 ### Data Processing
-To process the data, we had to drop unnecessary columns, including leaky variables and redundant time or location fields, so we could focus on the timestamp and our feature-engineered spatial variables derived from latitude and longitude. Using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, we condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling.
+To process the data, we had to drop unnecessary columns, including leaky variables and redundant time or location fields, so we could focus on the timestamp and our feature-engineered spatial variables derived from latitude and longitude. 
+```
+# drop unnessecary columns
+cleaned = data.drop(columns={
+    #'ID',
+    'Source',
+    'End_Lat',
+    'End_Lng',
+    'End_Time',
+    'Distance(mi)',
+    'Description',
+    'Street',
+    'City',
+    'Country',
+    'County',
+    'State',
+    'Zipcode',
+    'Country',
+    'Timezone',
+    'Airport_Code',
+    'Weather_Timestamp',
+    'Amenity',
+    'Civil_Twilight',
+    'Nautical_Twilight',
+    'Astronomical_Twilight'
+})
+```
+Using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, we condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling.
 
 ### Modeling
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
