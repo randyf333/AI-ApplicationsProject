@@ -87,6 +87,9 @@ Looking at the initial results of our three models, **XGBoost** had the highest 
 ![accuracy graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154137.png)
 ![raw f1-score graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154058.png)
 
+The parameter importance for f1-macro is show below. The most important parameters are listed at the top, and the correlation is listed as either positive(green) or negative(red) respectively:
+![f1-macro parameter importance](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154949.png)
+
 This tells us that our current features may not carry enough predictive power to increase our prediction accuracy. 
 
 
