@@ -44,6 +44,14 @@ To process the data, we had to drop unnecessary columns, including leaky variabl
 To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the highest performing model while still having feature performance as an output for analysis.
 
 # Evaluation & Analysis: 
+Notes
++ evaluation metrics of final model and real-world interpretation metrics (what do they tell us?)
++ feature importance comparison of 3 initial models (maybe move the comparison ones up to other section)
++ feature importance of final model
++ runtime comparison of 3 initial models
++ runtime of final model
++ decision threshold discussion and real-world interpretation
+
 Performance Summary: 
 
 | Model          | Accuracy |
@@ -111,6 +119,11 @@ We referenced the following sources:
     PyTorch
 
 # Conclusion
+Notes
++ summary and wrap up
++ real world impact and applications
++ deployment feasability
+
 Through this project, we were able to explore how different environmental, temporal, and spatial factors contribute to the severity of car accidents. By testing multiple machine learning models, we gained a better understanding of what types of algorithms work best for this kind of structured, real world data.
 
 Overall, XGBoost performed the best, reaching about 71% accuracy, which makes sense because boosted tree models are known to handle tabular and mixed type features very well. Our attention based neural network did not reach the same level of accuracy, but it was still useful because it helped us interpret which features the model considered important. The Random Forest served as a good baseline but showed lower performance compared to the other two.
