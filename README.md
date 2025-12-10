@@ -89,13 +89,12 @@ To evaluate the models, we focused on macro-F1 score rather than accuracy. Accur
 
 Below is a summary of each of the models and their performance: 
 
-Overall summary:
-| Model                | Macro-F1        | Accuracy | Training Time                  |
-| -------------------- | --------------- | -------- | -------------------------------|
-| XGBoost              | **0.71**        | 0.71     | ~16 seconds                    |
-| Attention Neural Net | **0.71 – 0.72** | 0.72     | Several minutes-several hours  |
-|                      |                 |          | (depending on laptop)          |
-| Random Forest        | 0.52            | 0.55     | ~2 seconds                     |
+| Model                    | Macro-F1  | Accuracy | Training Time                                      |
+| ------------------------ | --------- | -------- | ---------------------------------------------------|
+| **XGBoost**              | **0.71**  | 0.71     | ~16 seconds                                        |
+| **Attention Neural Net** | 0.71–0.72 | 0.72     | several min to several hours (depending on laptop) |
+| **Random Forest**        | 0.52      | 0.55     | ~2 seconds                                         |
+
 
 Both XGBoost and the Attention-based Neural Network achieved similar macro-F1 values around 0.71, while Random Forest lagged significantly at 0.52. The key difference was runtime: the neural network required an order of magnitude more computation to reach the same level of performance, making XGBoost a much more attractive option for development, iteration, and deployment on limited hardware. 
 
