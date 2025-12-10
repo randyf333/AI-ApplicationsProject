@@ -112,12 +112,7 @@ This suggests accident severity is highly localized. Places where severe crashes
 
 2. Local density features matter. KDE-based features, such as `kde_density_m2` and `kde_grid_count`, were repeatedly ranked in the top positions. These variables summarize how concentrated recent crashes are, which again reflects the importance of spatial clustering.
 
-3. Weather effects are meaningful across models. The attention network emphasized atmospheric conditions:
-+ Humidity
-+ Wind direction
-+ Weather Clean Rain
-
-Weather does not appear uniformly as strong as spatial context in trees, but the neural network clearly learned that micro-environmental conditions shape risk.
+3. Weather effects are meaningful across models. The attention network emphasized atmospheric conditions (Humidity, Wind direction, Weather Clean Rain). Weather does not appear uniformly as strong as spatial context in trees, but the neural network clearly learned that micro-environmental conditions shape risk.
 
 4. Traffic signs and intersection structure elevate risk. Two indicators emerged strongly: Stop sign present and traffic signal present. These variables may capture busy intersections, decision points, and conflict zones, where driver error is more likely.
 
