@@ -120,8 +120,26 @@ XGBoost Confusion Matrix:
  [  779  1699  3931 13799]]
    
 2. Attention Neural Network Results:
-      
 
+Test macro F1: 0.7146090213946625
+
+Classification report:
+               precision    recall  f1-score   support
+
+           0       0.79      0.82      0.80     20209
+           1       0.70      0.59      0.64     20209
+           2       0.66      0.76      0.71     20209
+           3       0.72      0.70      0.71     20208
+
+    accuracy                           0.72     80835
+   macro avg       0.72      0.72      0.71     80835
+weighted avg       0.72      0.72      0.71     80835
+
+Confusion matrix:
+ [[16475  1787  1221   726]
+ [ 2751 12000  3041  2417]
+ [  897  1660 15354  2298]
+ [  763  1748  3631 14066]]
 
 3. Random Forest Results: 
 Accuracy: 0.5508
