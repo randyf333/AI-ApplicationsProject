@@ -179,7 +179,7 @@ The parameter importance for f1-macro is show below. The most important paramete
 Combining a GridSearch and sweep, we ended up with the final model results:\
 Best params: {'xgb__gamma': 0.5, 'xgb__max_depth': 7, 'xgb__subsample': 0.7}\
 Best CV macro F1: 0.7132117427623111\
-Test macro F1: 0.7146090213946625\
+Test macro F1: 0.7146090213946625
 
 Classification report:
                precision    recall  f1-score   support
