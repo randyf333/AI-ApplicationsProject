@@ -110,14 +110,14 @@ XGBoost Classification Report:
            3       0.72      0.68      0.70     20208
 
     accuracy                           0.71     80835
-   macro avg       0.71      0.71      0.71     80835
-weighted avg       0.71      0.71      0.71     80835
+    macro avg       0.71      0.71      0.71     80835
+    weighted avg       0.71      0.71      0.71     80835
 
 
-XGBoost Confusion Matrix:
- [[16116  1859  1411   823]
- [ 2836 11830  3153  2390]
- [  879  1533 15598  2199]
+XGBoost Confusion Matrix:\
+ [[16116  1859  1411   823]\
+ [ 2836 11830  3153  2390]\
+ [  879  1533 15598  2199]\
  [  779  1699  3931 13799]]
    
 2. Attention Neural Network Results:
@@ -133,13 +133,13 @@ Classification report:
            3       0.72      0.70      0.71     20208
 
     accuracy                           0.72     80835
-   macro avg       0.72      0.72      0.71     80835
-weighted avg       0.72      0.72      0.71     80835
+    macro avg       0.72      0.72      0.71     80835
+    weighted avg       0.72      0.72      0.71     80835
 
-Confusion matrix:
- [[16475  1787  1221   726]
- [ 2751 12000  3041  2417]
- [  897  1660 15354  2298]
+Confusion matrix:\
+ [[16475  1787  1221   726]\
+ [ 2751 12000  3041  2417]\
+ [  897  1660 15354  2298]\
  [  763  1748  3631 14066]]
 
 3. Random Forest Results: 
@@ -154,14 +154,14 @@ Classification Report:
            4       0.56      0.55      0.56     20208
 
     accuracy                           0.55     80835
-   macro avg       0.57      0.55      0.52     80835
-weighted avg       0.57      0.55      0.52     80835
+    macro avg       0.57      0.55      0.52     80835
+    weighted avg       0.57      0.55      0.52     80835
 
 
-Confusion Matrix:
- [[13555  1014  2641  2999]
- [ 6525  3425  6261  3998]
- [ 1888   283 16460  1578]
+Confusion Matrix:\
+ [[13555  1014  2641  2999]\
+ [ 6525  3425  6261  3998]\
+ [ 1888   283 16460  1578]\
  [ 2108   569  6448 11083]]
 
 Looking at the initial results of our three models, **XGBoost** and **Attention Based Neural Network** had similar macro-f1 scores at 0.71 while **Random Forest** had a macro-f1 score of 0.52. These results were not unexpected, as **XGBoost** excels at structued and tabular data compared to **Random Forest** and an **Attention Based Neural Network** is a very powerful architecture. However the **Attention Based Neural Network** took substantially longer to run compared to the **XGBoost** model. Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. The results of our sweeps are shown in the following graphs:
@@ -176,10 +176,10 @@ The parameter importance for f1-macro is show below. The most important paramete
 
 ![f1-macro parameter importance](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154949.png)
 
-Combining a GridSearch and sweep, we ended up with the final model results:
-Best params: {'xgb__gamma': 0.5, 'xgb__max_depth': 7, 'xgb__subsample': 0.7}
-Best CV macro F1: 0.7132117427623111
-Test macro F1: 0.7146090213946625
+Combining a GridSearch and sweep, we ended up with the final model results:\
+Best params: {'xgb__gamma': 0.5, 'xgb__max_depth': 7, 'xgb__subsample': 0.7}\
+Best CV macro F1: 0.7132117427623111\
+Test macro F1: 0.7146090213946625\
 
 Classification report:
                precision    recall  f1-score   support
@@ -190,13 +190,13 @@ Classification report:
            3       0.72      0.70      0.71     20208
 
     accuracy                           0.72     80835
-   macro avg       0.72      0.72      0.71     80835
-weighted avg       0.72      0.72      0.71     80835
+    macro avg       0.72      0.72      0.71     80835
+    weighted avg       0.72      0.72      0.71     80835
 
-Confusion matrix:
- [[16475  1787  1221   726]
- [ 2751 12000  3041  2417]
- [  897  1660 15354  2298]
+Confusion matrix:\
+ [[16475  1787  1221   726]\
+ [ 2751 12000  3041  2417]\
+ [  897  1660 15354  2298]\
  [  763  1748  3631 14066]]
 
 Even with parameter sweeps and cross-validation to find the best parameters, we saw little to no improvement in our accuracy or f1 score. These results indicate to us that our current features may not carry enough predictive power to increase our prediction accuracy. More feature engineering or more data may be required to improve the performance of our model. 
