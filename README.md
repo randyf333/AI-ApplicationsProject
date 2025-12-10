@@ -69,15 +69,11 @@ Using the raw lat/lng values, we projected coordinates into a metric CRS, create
 All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling.
 
 ### Modeling
-To predict Severity, we tested 3 different models and compared performance for each: **Random Forest**, **XGBoost**, and an **attention based neural network**. Our goal was to find the ideal balance between model performance and runtime using our laptops, while allowing us to view feature importance as an output.
+To predict Severity, we tested three different models and compared performance for each: Random Forest, XGBoost, and an attention based neural network. These models represent three increasing levels of complexity. Random Forest is a well established ensemble method that is often used as a starting point for tabular prediction tasks. It provides fast training times and interpretable feature splits, so it served as a strong baseline for us. XGBoost is a gradient boosted decision tree model that is well known for state of the art performance on structured datasets. It builds trees sequentially and corrects previous mistakes at each iteration, which typically results in higher accuracy than Random Forest when the underlying relationships are non linear. Finally, after covering neural networks in class, we implemented an attention based neural network as our deep learning alternative. Attention architectures have recently become popular across many domains because they can learn how to focus on the most informative parts of the input. For a task like accident severity prediction, the ability to assign higher weight to certain weather, spatial, or roadway conditions has the potential to reveal patterns that models based on fixed tree splits may miss. This network allowed us to explore whether a more flexible model could provide further gains and whether attention weights could provide useful insight into which features mattered most during prediction.
 
-To train our models, we utilized Sci-kit learn for random forest and xgboost, and tensorflow/keras for the neural network. Our train-test split was a stratified 70/30 split. Below is a brief description of our workflow for each of the three models:
+Our goal in comparing these three models was to find the ideal balance between predictive performance, runtime feasibility on our laptops without access to high end GPUs, and interpretability. Each model gave us different strengths. Random Forest trained quickly and served as a reference point for improvement. XGBoost offered strong performance with moderate training time and produced clear feature importance values. The attention based network required much longer for training and more tuning, but it allowed us to examine model behaviour through the lens of learned attention weights. By choosing these three models, we were able to evaluate traditional ensemble methods alongside a modern deep learning architecture and identify which approach was most practical and effective for our data.
 
-**Random Forest:**
-
-**XGBoost:**
-
-**Neural Network:**
+To train our models, we utilized Sci-kit learn for random forest and xgboost, and tensorflow/keras for the neural network. Our train-test split was a stratified 70/30 split.
 
 # Evaluation & Analysis: 
 Notes
