@@ -87,7 +87,7 @@ Notes
 
 Below is a summary of each of the models and their performance: 
 
-| Model          | Accuracy |
+| Model          | Macro-F1 |
 |----------------|----------|
 | XGBoost        | 0.71     |
 | Attention NN   | 0.6124   |
@@ -95,7 +95,7 @@ Below is a summary of each of the models and their performance:
 
 1. XGBoost Results:
 
-XGBoost Model Accuracy: 0.7094
+XGBoost Model F1-Score: 0.7094
 
 XGBoost Classification Report:
                precision    recall  f1-score   support
@@ -139,7 +139,7 @@ Confusion matrix:\
  [  763  1748  3631 14066]]
 
 3. Random Forest Results: 
-Accuracy: 0.5508
+Macro-f1: 0.52
 
 Classification Report:
                precision    recall  f1-score   support
