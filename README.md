@@ -88,22 +88,52 @@ Performance Summary:
 | Random Forest  | 0.555    |
 
 1. XGBoost Results:
+XGBoost Model Accuracy: 0.7094
 
+XGBoost Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.78      0.80      0.79     20209
+           1       0.70      0.59      0.64     20209
+           2       0.65      0.77      0.70     20209
+           3       0.72      0.68      0.70     20208
+
+    accuracy                           0.71     80835
+   macro avg       0.71      0.71      0.71     80835
+weighted avg       0.71      0.71      0.71     80835
+
+
+XGBoost Confusion Matrix:
+ [[16116  1859  1411   823]
+ [ 2836 11830  3153  2390]
+ [  879  1533 15598  2199]
+ [  779  1699  3931 13799]]
    
 2. Attention Neural Network Results:
-      Overall Metrics:
-
-            Accuracy: 0.6124
-            
-            Macro Precision: 0.6015
-            
-            Macro Recall: 0.6401
-            
-            Macro F1: 0.6056
+      
 
 
 3. Random Forest Results: 
+Accuracy: 0.5508
 
+Classification Report:
+               precision    recall  f1-score   support
+
+           1       0.56      0.67      0.61     20209
+           2       0.65      0.17      0.27     20209
+           3       0.52      0.81      0.63     20209
+           4       0.56      0.55      0.56     20208
+
+    accuracy                           0.55     80835
+   macro avg       0.57      0.55      0.52     80835
+weighted avg       0.57      0.55      0.52     80835
+
+
+Confusion Matrix:
+ [[13555  1014  2641  2999]
+ [ 6525  3425  6261  3998]
+ [ 1888   283 16460  1578]
+ [ 2108   569  6448 11083]]
 
 
 
