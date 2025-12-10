@@ -71,20 +71,11 @@ All of this gave us a cleaner, more meaningful version of the dataset that bette
 ### Modeling
 To predict Severity, we tested three different models and compared performance for each: Random Forest, XGBoost, and an attention based neural network. These models represent three increasing levels of complexity. Random Forest is a well established ensemble method that is often used as a starting point for tabular prediction tasks. It provides fast training times and interpretable feature splits, so it served as a strong baseline for us. XGBoost is a gradient boosted decision tree model that is well known for state of the art performance on structured datasets. It builds trees sequentially and corrects previous mistakes at each iteration, which typically results in higher accuracy than Random Forest when the underlying relationships are non linear. Finally, after covering neural networks in class, we implemented an attention based neural network as our deep learning alternative. Attention architectures have recently become popular across many domains because they can learn how to focus on the most informative parts of the input. For a task like accident severity prediction, the ability to assign higher weight to certain weather, spatial, or roadway conditions has the potential to reveal patterns that models based on fixed tree splits may miss. This network allowed us to explore whether a more flexible model could provide further gains and whether attention weights could provide useful insight into which features mattered most during prediction.
 
-Our goal in comparing these three models was to find the ideal balance between predictive performance, runtime feasibility on our laptops without access to high end GPUs, and interpretability. Each model gave us different strengths. Random Forest trained quickly and served as a reference point for improvement. XGBoost offered strong performance with moderate training time and produced clear feature importance values. The attention based network required much longer for training and more tuning, but it allowed us to examine model behaviour through the lens of learned attention weights. By choosing these three models, we were able to evaluate traditional ensemble methods alongside a modern deep learning architecture and identify which approach was most practical and effective for our data.
+Our goal in comparing these three models was to find the ideal balance between predictive performance, runtime feasibility on our laptops without access to high end GPUs, and interpretability. Each model gave us different strengths. Random Forest trained quickly and served as a reference point for improvement. XGBoost offered strong performance with moderate training time and produced clear feature importance values (as shown in the Evaluation section). The attention based network required much longer for training and more tuning, but it allowed us to examine model behaviour through the lens of learned attention weights. By choosing these three models, we were able to evaluate traditional ensemble methods alongside a modern deep learning architecture and identify which approach was most practical and effective for our data.
 
 To train our models, we utilized Sci-kit learn for random forest and xgboost, and tensorflow/keras for the neural network. Our train-test split was a stratified 70/30 split.
 
 # Evaluation & Analysis: 
-Notes
-+ Explanation of evaluation metrics and why we picked the ones we picked
-+ evaluation metrics of final model and real-world interpretation metrics (what do they tell us?)
-+ feature importance comparison of 3 initial models (maybe move the comparison ones up to other section)
-+ feature importance of final model
-+ runtime comparison of 3 initial models
-+ runtime of final model
-+ decision threshold discussion and real-world interpretation
-
 To evaluate the models, we focused on macro-F1 score rather than accuracy. Accuracy treats all errors the same and can be misleading when the distribution of predicted classes is unbalanced or when certain types of mistakes are more harmful. In our context, failing to correctly identify a moderate or severe accident is much more costly than misclassifying a minor one. The macro-F1 score averages precision and recall for each class equally, so performance on the high-impact cases contributes just as much as the common ones. This provides a more honest assessment of real-world usefulness.
 
 Below is a summary of each of the models and their performance: 
@@ -94,7 +85,6 @@ Below is a summary of each of the models and their performance:
 | **XGBoost**              | **0.71**  | 0.71     | ~16 seconds                                        |
 | **Attention Neural Net** | 0.71–0.72 | 0.72     | several min to several hours (depending on laptop) |
 | **Random Forest**        | 0.52      | 0.55     | ~2 seconds                                         |
-
 
 Both XGBoost and the Attention-based Neural Network achieved similar macro-F1 values around 0.71, while Random Forest lagged significantly at 0.52. The key difference was runtime: the neural network required an order of magnitude more computation to reach the same level of performance, making XGBoost a much more attractive option for development, iteration, and deployment on limited hardware. 
 
@@ -107,12 +97,33 @@ Each model learned somewhat different patterns about what drives accident severi
 | 4    | kde_density_m2 | bool__Traffic_Signal | Wind Direction South |
 | 5    | kde_1km        | num__kde_density_m2  | Weather Clean Rain   |
 
+Here is a clean, Markdown-ready version you can copy and paste:
+
+---
+
+### Interpretation of Feature Importance
+
 Several patterns stand out across models:
+
 1. Spatial accident history is the strongest signal. Both gradient-boosted trees placed cell-level metrics at the top:
-+ cell1_mean_sev (average severity of nearby accidents)
-+ cell1_count (volume of nearby accidents)
++ `cell1_mean_sev` (average severity of nearby accidents)
++ `cell1_count` (volume of nearby accidents)
 This suggests accident severity is highly localized. Places where severe crashes have happened before tend to produce severe crashes again, likely due to infrastructure design, traffic flow, or visibility constraints.
 
+2. Local density features matter. KDE-based features, such as `kde_density_m2` and `kde_grid_count`, were repeatedly ranked in the top positions. These variables summarize how concentrated recent crashes are, which again reflects the importance of spatial clustering.
+
+3. Weather effects are meaningful across models. The attention network emphasized atmospheric conditions:
++ Humidity
++ Wind direction
++ Weather Clean Rain
+
+Weather does not appear uniformly as strong as spatial context in trees, but the neural network clearly learned that micro-environmental conditions shape risk.
+
+4. Traffic signs and intersection structure elevate risk. Two indicators emerged strongly: Stop sign present and traffic signal present. These variables may capture busy intersections, decision points, and conflict zones, where driver error is more likely.
+
+Also, the attention model required roughly 20–30 times more computation than XGBoost for a nearly identical macro-F1 score. On consumer hardware, such differences matter. Parameter sweeps, re-training, and real-time deployment all become more feasible when runtime is measured in seconds rather than minutes. For this reason, we chose XGBoost as the final model.
+
+The model predictions could be calibrated by adjusting thresholds instead of using the default argmax. In a real deployment, the objective is not simply to label severity correctly, but to prioritize safety. For example: If the model predicts high probability of severity, even if not the top prediction, a system could trigger driver warnings, traffic rerouting, or dynamic signage. From a practical perspective, false negatives on severe accidents are far more costly than false positives. In that scenario, it would be entirely reasonable to shift the threshold to make the model more sensitive to severe cases, even if that slightly reduces precision on minor cases.
 
 Below is a summary of each of the models and their performance: 
 
@@ -189,7 +200,7 @@ Confusion Matrix:\
  [ 1888   283 16460  1578]\
  [ 2108   569  6448 11083]]
 
-Looking at the initial results of our three models, **XGBoost** and **Attention Based Neural Network** had similar macro-f1 scores at 0.71 while **Random Forest** had a macro-f1 score of 0.52. These results were not unexpected, as **XGBoost** excels at structued and tabular data compared to **Random Forest** and an **Attention Based Neural Network** is a very powerful architecture. However the **Attention Based Neural Network** took substantially longer to run compared to the **XGBoost** model. Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. The results of our sweeps are shown in the following graphs:
+Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. The results of our sweeps are shown in the following graphs:
 
 ![f1-weighted graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154023.png)
 ![f1-macro graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154119.png)
