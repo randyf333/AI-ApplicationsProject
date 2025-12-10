@@ -98,6 +98,7 @@ Below is a summary of each of the models and their performance:
 | Random Forest  | 0.555    |
 
 1. XGBoost Results:
+
 XGBoost Model Accuracy: 0.7094
 
 XGBoost Classification Report:
@@ -174,6 +175,29 @@ We evaluated off of macro-f1 score because of the nature of our data. We chose t
 The parameter importance for f1-macro is show below. The most important parameters are listed at the top, and the correlation is listed as either positive(green) or negative(red) respectively:
 
 ![f1-macro parameter importance](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154949.png)
+
+Combining a GridSearch and sweep, we ended up with the final model results:
+Best params: {'xgb__gamma': 0.5, 'xgb__max_depth': 7, 'xgb__subsample': 0.7}
+Best CV macro F1: 0.7132117427623111
+Test macro F1: 0.7146090213946625
+
+Classification report:
+               precision    recall  f1-score   support
+
+           0       0.79      0.82      0.80     20209
+           1       0.70      0.59      0.64     20209
+           2       0.66      0.76      0.71     20209
+           3       0.72      0.70      0.71     20208
+
+    accuracy                           0.72     80835
+   macro avg       0.72      0.72      0.71     80835
+weighted avg       0.72      0.72      0.71     80835
+
+Confusion matrix:
+ [[16475  1787  1221   726]
+ [ 2751 12000  3041  2417]
+ [  897  1660 15354  2298]
+ [  763  1748  3631 14066]]
 
 Even with parameter sweeps and cross-validation to find the best parameters, we saw little to no improvement in our accuracy or f1 score. These results indicate to us that our current features may not carry enough predictive power to increase our prediction accuracy. More feature engineering or more data may be required to improve the performance of our model. 
 
