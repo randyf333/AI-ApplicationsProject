@@ -85,6 +85,36 @@ Notes
 + runtime of final model
 + decision threshold discussion and real-world interpretation
 
+To evaluate the models, we focused on macro-F1 score rather than accuracy. Accuracy treats all errors the same and can be misleading when the distribution of predicted classes is unbalanced or when certain types of mistakes are more harmful. In our context, failing to correctly identify a moderate or severe accident is much more costly than misclassifying a minor one. The macro-F1 score averages precision and recall for each class equally, so performance on the high-impact cases contributes just as much as the common ones. This provides a more honest assessment of real-world usefulness.
+
+Below is a summary of each of the models and their performance: 
+
+Overall summary:
+| Model                | Macro-F1        | Accuracy | Training Time                  |
+| -------------------- | --------------- | -------- | -------------------------------|
+| XGBoost              | **0.71**        | 0.71     | ~16 seconds                    |
+| Attention Neural Net | **0.71 – 0.72** | 0.72     | Several minutes-several hours  |
+|                      |                 |          | (depending on laptop)          |
+| Random Forest        | 0.52            | 0.55     | ~2 seconds                     |
+
+Both XGBoost and the Attention-based Neural Network achieved similar macro-F1 values around 0.71, while Random Forest lagged significantly at 0.52. The key difference was runtime: the neural network required an order of magnitude more computation to reach the same level of performance, making XGBoost a much more attractive option for development, iteration, and deployment on limited hardware. 
+
+Each model learned somewhat different patterns about what drives accident severity. Below, we list the top five features from each model:
+| Rank | Random Forest  | XGBoost              | Attention Network    |
+| ---- | -------------- | -------------------- | -------------------- |
+| 1    | cell1_mean_sev | num__cell1_mean_sev  | Stop                 |
+| 2    | cell1_count    | num__cell1_count     | Humidity (%)         |
+| 3    | kde_grid_count | num__Wind_Chill (F)  | Wind Direction Calm  |
+| 4    | kde_density_m2 | bool__Traffic_Signal | Wind Direction South |
+| 5    | kde_1km        | num__kde_density_m2  | Weather Clean Rain   |
+
+Several patterns stand out across models:
+1. Spatial accident history is the strongest signal. Both gradient-boosted trees placed cell-level metrics at the top:
++ cell1_mean_sev (average severity of nearby accidents)
++ cell1_count (volume of nearby accidents)
+This suggests accident severity is highly localized. Places where severe crashes have happened before tend to produce severe crashes again, likely due to infrastructure design, traffic flow, or visibility constraints.
+
+
 Below is a summary of each of the models and their performance: 
 
 | Model          | Macro-F1 |
