@@ -97,12 +97,6 @@ Each model learned somewhat different patterns about what drives accident severi
 | 4    | kde_density_m2 | bool__Traffic_Signal | Wind Direction South |
 | 5    | kde_1km        | num__kde_density_m2  | Weather Clean Rain   |
 
-Here is a clean, Markdown-ready version you can copy and paste:
-
----
-
-### Interpretation of Feature Importance
-
 Several patterns stand out across models:
 
 1. Spatial accident history is the strongest signal. Both gradient-boosted trees placed cell-level metrics at the top:
@@ -195,13 +189,15 @@ Confusion Matrix:\
  [ 1888   283 16460  1578]\
  [ 2108   569  6448 11083]]
 
+Also, the attention model required roughly 20–30 times more computation than XGBoost for a nearly identical macro-F1 score. On consumer hardware, such differences matter. Parameter sweeps, re-training, and real-time deployment all become more feasible when runtime is measured in seconds rather than minutes. For this reason, we chose XGBoost as the final model.
+
+The model predictions could be calibrated by adjusting thresholds instead of using the default argmax. In a real deployment, the objective is not simply to label severity correctly, but to prioritize safety. For example: If the model predicts high probability of severity, even if not the top prediction, a system could trigger driver warnings, traffic rerouting, or dynamic signage. From a practical perspective, false negatives on severe accidents are far more costly than false positives. In that scenario, it would be entirely reasonable to shift the threshold to make the model more sensitive to severe cases, even if that slightly reduces precision on minor cases.
+
 Given these results, we decided to focus on improving our XGBoost model's performance as described in the modeling section. To do so, we created a parameter sweep using Wandb for analysis to try and find the optimal parameters for our XGBoost model given our dataset. However, after running through the sweep the accuracy of the model did not dramatically increase, instead hovering around 0.72. The results of our sweeps are shown in the following graphs:
 
 ![f1-weighted graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154023.png)
 ![f1-macro graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154119.png)
 ![raw f1-score graph](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154058.png)
-
-We evaluated off of macro-f1 score because of the nature of our data. We chose to evaluate our model using the f1 score because it provides a balanced measure of precision and recall. Unlike accuracy, which can be misleading in cases of uneven error types, the F1 score ensures that the model performs well both in correctly identifying positive cases (recall) and in minimizing false positives (precision). This makes it a more robust metric for assessing overall classification performance, especially when both types of errors carry meaningful consequences.
 
 The parameter importance for f1-macro is show below. The most important parameters are listed at the top, and the correlation is listed as either positive(green) or negative(red) respectively:
 
@@ -232,6 +228,7 @@ Confusion matrix:\
 
 Even with parameter sweeps and cross-validation to find the best parameters, we saw little to no improvement in our accuracy or f1 score. These results indicate to us that our current features may not carry enough predictive power to increase our prediction accuracy. More feature engineering or more data may be required to improve the performance of our model. 
 
+### Final Model
 
 # Related Work
 We referenced the following sources:
