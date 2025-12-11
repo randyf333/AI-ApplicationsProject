@@ -122,11 +122,11 @@ Below is a summary of each of the models and their performance:
 | Model          | Macro-F1 |
 |----------------|----------|
 | XGBoost        | 0.71     |
-| Attention NN   | 0.6124   |
+| Attention NN   | 0.75     |
 | Random Forest  | 0.52     |
 
 1. XGBoost Results:
-
+```
 XGBoost Macro f1: 0.7078
 
 XGBoost Classification Report:
@@ -142,13 +142,13 @@ XGBoost Classification Report:
     weighted avg       0.71      0.71      0.71     80835
 
 
-XGBoost Confusion Matrix:\
- [[16116  1859  1411   823]\
- [ 2836 11830  3153  2390]\
- [  879  1533 15598  2199]\
- [  779  1699  3931 13799]]\
+XGBoost Confusion Matrix:
+ [[16116  1859  1411   823]
+ [ 2836 11830  3153  2390]
+ [  879  1533 15598  2199]
+ [  779  1699  3931 13799]]
 Training took 16.32 seconds
-   
+   ```
 2. Attention Neural Network Results
 ```
 MODEL EVALUATION
@@ -189,7 +189,8 @@ CONFUSION MATRIX:
    Moderate          2,758     10,942      6,509
    Severe            1,353      2,213     36,851
 ```
-3. Random Forest Results: 
+3. Random Forest Results:
+``` 
 Macro f1: 0.5174
 
 Classification Report:
@@ -205,13 +206,13 @@ Classification Report:
     weighted avg       0.57      0.55      0.52     80835
 
 
-Confusion Matrix:\
- [[13555  1014  2641  2999]\
- [ 6525  3425  6261  3998]\
- [ 1888   283 16460  1578]\
- [ 2108   569  6448 11083]]\
+Confusion Matrix:
+ [[13555  1014  2641  2999]
+ [ 6525  3425  6261  3998]
+ [ 1888   283 16460  1578]
+ [ 2108   569  6448 11083]]
 Training took 2.29 seconds
-
+```
 Also, the attention model required roughly 20–30 times more computation than XGBoost for a nearly identical macro-F1 score. On consumer hardware, such differences matter. Parameter sweeps, re-training, and real-time deployment all become more feasible when runtime is measured in seconds rather than minutes. For this reason, we chose XGBoost as the final model.
 
 The model predictions could be calibrated by adjusting thresholds instead of using the default argmax. In a real deployment, the objective is not simply to label severity correctly, but to prioritize safety. For example: If the model predicts high probability of severity, even if not the top prediction, a system could trigger driver warnings, traffic rerouting, or dynamic signage. From a practical perspective, false negatives on severe accidents are far more costly than false positives. In that scenario, it would be entirely reasonable to shift the threshold to make the model more sensitive to severe cases, even if that slightly reduces precision on minor cases.
