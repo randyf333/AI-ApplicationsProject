@@ -272,6 +272,28 @@ Tools Utilized
 + PyTorch
 + GeoPandas
 
+# Code Citation & Implementation Details
+
+Below are sources used in `Nwprocessing-and-modeling.ipynb`.
+- Attention concept: Vaswani et al. (2017), Bahdanau et al. (2014) - cited above
+- Implementation: [TensorFlow Custom Layers Guide](https://www.tensorflow.org/guide/keras/custom_layers_and_models)
+
+- Architecture pattern: Goodfellow et al. (2016) - Deep Feedforward Networks
+- BatchNorm: Ioffe & Szegedy (2015) - cited above
+- Dropout: Srivastava et al. (2014) - cited above
+- [Keras Functional API](https://keras.io/guides/functional_api/)
+
+- Frequency encoding: Micci-Barreca (2001) - cited above
+- One-hot: [Pandas get_dummies](https://pandas.pydata.org/docs/reference/api/pandas.get_dummies.html)
+
+- [Scikit-learn preprocessing](https://scikit-learn.org/stable/modules/preprocessing.html)
+- [train_test_split docs](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html)
+
+- Early stopping: Prechelt (1998) - cited above
+- [Keras Callbacks API](https://keras.io/api/callbacks/)
+
+
+
 
 # Conclusion
 Through this project, we were able to explore how different environmental, temporal, and spatial factors contribute to the severity of car accidents. By testing multiple machine learning models, we gained a better understanding of what types of algorithms work best for this kind of structured, real world data. The consistent finding across all models is that severity is strongly tied to location based patterns: areas with dense accident histories or specific high risk grid cells produce more severe outcomes. Weather and intersection structure provide additional signals as well.
