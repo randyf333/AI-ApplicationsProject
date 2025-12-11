@@ -1,4 +1,4 @@
-<img width="615" height="602" alt="image" src="https://github.com/user-attachments/assets/c6a35ec1-c91c-409a-88fc-a9398b391d35" /># Predicting Car Accident Severity
+# Predicting Car Accident Severity
 AI project for Hanyang ITE3051
 
 Gavin Pryor, Department of Financial Management, gavin.anaiah@gmail.com <br>
