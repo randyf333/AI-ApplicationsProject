@@ -269,6 +269,8 @@ Tools Utilized
 + XGBoost
 + Weights & Biases
 + PyTorch
++ GeoPandas
+
 
 # Conclusion
 Through this project, we were able to explore how different environmental, temporal, and spatial factors contribute to the severity of car accidents. By testing multiple machine learning models, we gained a better understanding of what types of algorithms work best for this kind of structured, real world data. The consistent finding across all models is that severity is strongly tied to location based patterns: areas with dense accident histories or specific high risk grid cells produce more severe outcomes. Weather and intersection structure provide additional signals as well.
