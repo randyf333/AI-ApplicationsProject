@@ -275,21 +275,21 @@ Tools Utilized
 # Code Citation & Implementation Details
 
 Below are sources used in `Nwprocessing-and-modeling.ipynb`.
-- Attention concept: Vaswani et al. (2017), Bahdanau et al. (2014) - cited above
+- Attention concept: Vaswani et al. (2017), Bahdanau et al. (2014)
 - Implementation: [TensorFlow Custom Layers Guide](https://www.tensorflow.org/guide/keras/custom_layers_and_models)
 
 - Architecture pattern: Goodfellow et al. (2016) - Deep Feedforward Networks
-- BatchNorm: Ioffe & Szegedy (2015) - cited above
-- Dropout: Srivastava et al. (2014) - cited above
+- BatchNorm: Ioffe & Szegedy (2015)
+- Dropout: Srivastava et al. (2014) 
 - [Keras Functional API](https://keras.io/guides/functional_api/)
 
-- Frequency encoding: Micci-Barreca (2001) - cited above
+- Frequency encoding: Micci-Barreca (2001) 
 - One-hot: [Pandas get_dummies](https://pandas.pydata.org/docs/reference/api/pandas.get_dummies.html)
 
 - [Scikit-learn preprocessing](https://scikit-learn.org/stable/modules/preprocessing.html)
 - [train_test_split docs](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html)
 
-- Early stopping: Prechelt (1998) - cited above
+- Early stopping: Prechelt (1998) 
 - [Keras Callbacks API](https://keras.io/api/callbacks/)
 
 
