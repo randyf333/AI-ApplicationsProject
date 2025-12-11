@@ -583,7 +583,16 @@ Even with parameter sweeps and cross-validation to find the best parameters, we 
 For feature importance, the big spatial signals stayed the same, but the important change in this final model is that it now relies on specific high risk grid cells rather than just broad spatial features. Encoded cell IDs like cat__cell_1km_-2053_1728 and cat__cell_5km_-153_374 jumped into the top ranks, showing the model has learned precise geographic hotspots instead of general patterns. Weather features dropped in importance and became more selective. Only a few strong indicators remain, meaning the model filtered out noisy categories and kept the ones that consistently correlate with severity. Intersection indicators like traffic signals and crossings are still helpful but got pushed lower because the detailed spatial encodings explain risk even better on their own. Overall, the final model shifted from general trends to high resolution spatial detail, which is a sign of a more mature feature pipeline and a more confident model.
 
 # Related Work
-We referenced the following sources:
+Several Kaggle community notebooks have analyzed the US Accidents dataset from a primarily exploratory perspective. One early notebook focuses on cleaning the raw data, handling missing values, and performing extensive EDA on geography, time, and road conditions, including correlation analysis and tree based feature importance using ExtraTrees and XGBoost with Severity treated as a numeric target. Another detailed EDA notebook examines how accident frequency varies by city, state, street, time of day, day of week, month, and weather. Their work highlights that California and a small set of large cities account for a disproportionate share of accidents, that most recorded cases are of moderate severity, and that accident counts spike during commuting hours and in specific seasonal and humidity ranges.
+
+Mantry (2025) conducted a large scale EDA of the 7.7M record dataset and found that accidents have steadily increased over the years, cluster heavily in a small number of cities and streets, and occur most often during weekday commute hours. Their results also showed that most crashes happen under normal weather and high visibility, reinforcing that infrastructure and human behavior dominate over atmospheric factors. They further noted that many accident locations lacked basic roadway safety features, suggesting infrastructure improvements as a key direction for reducing severity and frequency.
+
+Links to blogs/notebooks:
++ https://ieeexplore.ieee.org/document/10472843
++ https://www.kaggle.com/code/satyabrataroy/60-insights-extraction-us-accident-analysis/notebook
++ https://medium.com/@itti7455/exploratory-data-analysis-a0a4f2b5ea41
++ https://www.kaggle.com/code/deepakdeepu8978/how-severity-the-accidents-is
++ https://www.kaggle.com/code/devbilalkhan/geospatial-insights-us-car-accidents
 
 Datasets & Documentation:
 + US Accidents (2016–2023) — Kaggle
