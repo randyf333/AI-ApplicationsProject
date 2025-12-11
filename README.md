@@ -183,6 +183,7 @@ Classification Report:
     macro avg       0.57      0.55      0.52     80835
     weighted avg       0.57      0.55      0.52     80835
 
+<img width="619" height="598" alt="Screenshot 2025-12-11 at 9 57 54 AM" src="https://github.com/user-attachments/assets/1fde1864-56a0-4ef7-9531-aa8b35ce4e8e" />
 
 Confusion Matrix:\
  [[13555  1014  2641  2999]\
