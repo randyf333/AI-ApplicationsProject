@@ -66,7 +66,143 @@ cleaned = data.drop(columns={
     'Astronomical_Twilight'
 })
 ```
-Using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, we condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. Finally, since less severe accidents were far more common than severe accidents in the dataset, we utilized random undersampling to get an even number of each Severity class. This ensured that the model could not simply learn to favor the majority classes, which would have produced deceptively high accuracy while failing to recognize the rarer, high-severity cases. By training on a balanced dataset, each severity level contributed equally to the learning process, improving the model’s ability to generalize and leading to a more meaningful and fair comparison across classes.
+We thought that location could be a strong indicator of how severe an accident may occur. However, while the dataset provided raw latitude and longitude, it is difficult for an AI model to utilize raw location data to identify patterns. Instead of using the raw lat/lng values, we projected coordinates into a metric CRS, created point geometries, generated multi-scale grid cells, and computed KDE-based density features to capture both local and regional accident patterns. We created these additional features as follows and appended it to our dataset:
+
+```
+# create GeoDataFrame from latitude and longitude for start locations
+gdf = gpd.GeoDataFrame(cleaned, geometry=gpd.points_from_xy(cleaned.Start_Lng, cleaned.Start_Lat),crs="EPSG:4326")
+gdf = gdf.to_crs(epsg=5070)
+gdf["x"] = gdf.geometry.x
+gdf["y"] = gdf.geometry.y
+
+print("Data frame created")
+
+#Multi-scale grid / tile IDs
+'''
+grid tiles produce compact neighborhood identifiers that capture local context and 
+let you compute cell-level aggregates (counts, mean severity). Multi-scale tiles 
+(fine + coarse) allow the model to see both micro and macro spatial structure
+'''
+def tile_id(x, y, scale):
+    tile_x = (x // scale).astype(int)
+    tile_y = (y // scale).astype(int)
+    return tile_x.astype(str) + "_" + tile_y.astype(str)
+
+gdf["cell_1km"] = tile_id(gdf["x"], gdf["y"], 1000)
+gdf["cell_5km"] = tile_id(gdf["x"], gdf["y"], 5000)
+
+print("Grid cells computed")
+
+#KDE density (projected coords)
+'''Gives measure of local accident concentration or density'''
+import scipy.ndimage as ndi
+
+# Fast gridded KDE (recommended)
+bandwidth = 1000.0      # same units as projected coords (meters)
+grid_size = 500.0       # cell size for histogram in meters (tweak for resolution/perf)
+
+xs = gdf["x"].values
+ys = gdf["y"].values
+
+# define grid bounds with padding to avoid edge effects
+pad = bandwidth * 3
+xmin, xmax = xs.min() - pad, xs.max() + pad
+ymin, ymax = ys.min() - pad, ys.max() + pad
+
+nx = int(np.ceil((xmax - xmin) / grid_size))
+ny = int(np.ceil((ymax - ymin) / grid_size))
+
+H, xedges, yedges = np.histogram2d(xs, ys, bins=[nx, ny], range=[[xmin, xmax], [ymin, ymax]])
+
+# smooth counts with gaussian filter (sigma in pixels = bandwidth / grid_size)
+sigma = bandwidth / grid_size
+H_smooth = ndi.gaussian_filter(H, sigma=sigma, mode="constant")
+
+# map each point to its grid cell and assign smoothed density
+ix = np.minimum(np.maximum(((xs - xmin) / grid_size).astype(int), 0), H_smooth.shape[0]-1)
+iy = np.minimum(np.maximum(((ys - ymin) / grid_size).astype(int), 0), H_smooth.shape[1]-1)
+
+# add per-point grid indices and an id for the KDE grid cell
+gdf["kde_ix"] = ix
+gdf["kde_iy"] = iy
+gdf["kde_cell_kdegrid"] = [f"{i}_{j}" for i, j in zip(ix, iy)]
+
+kde_vals = H_smooth[ix, iy]
+
+# optional: convert counts -> density per square meter (makes values comparable)
+cell_area = grid_size * grid_size
+kde_density = kde_vals / (cell_area)
+
+gdf["kde_1km"] = kde_density
+gdf["kde_density_m2"] = kde_density
+
+# build a DataFrame with one row per KDE-grid cell (counts, density, center coords)
+gi, gj = np.indices(H_smooth.shape)       # gi.shape == gj.shape == H_smooth.shape
+gi_f = gi.ravel()
+gj_f = gj.ravel()
+counts_f = H_smooth.ravel()
+x_centers = xmin + (gi_f + 0.5) * grid_size
+y_centers = ymin + (gj_f + 0.5) * grid_size
+
+kde_grid_df = pd.DataFrame({
+    "kde_cell_kdegrid": [f"{i}_{j}" for i, j in zip(gi_f, gj_f)],
+    "kde_grid_count": counts_f,
+    "kde_grid_density_m2": counts_f / (cell_area),
+    "kde_grid_x": x_centers,
+    "kde_grid_y": y_centers
+})
+```
+
+We also handled missing values in weather and environmental columns, removed invalid or extreme outliers, and standardized continuous fields where needed. For the weather-related variables, our original dataset had multiple subcategories of weather events. For example, scattered clouds vs. mostly cloudy vs. partly cloudy etc. We condensed dozens of noisy text categories into cleaner groups like weather type, intensity, and flags for windy or thunder conditions, which made the variables much easier for the model to learn from. We cleaned the data as follows: 
+```
+    # reduce the number of categories
+    def to_category(txt: str) -> str:
+        if txt in ('unknown', ''):
+            return 'Unknown'
+        if re.search(r'\b(wintry mix|rain and snow|snow and rain|snow and sleet|sleet and snow|freezing drizzle|freezing rain|freezing fog|ice pellets)\b', txt):
+            if re.search(r'\b(freezing rain|freezing drizzle|freezing fog|ice pellets)\b', txt):
+                return 'Freezing / Ice'
+            return 'Wintry Mix'
+        if re.search(r'\b(t-?storm|thunderstorm|thunder)\b', txt):
+            return 'Thunderstorm'
+        if re.search(r'\b(snow grains|snow showers?|snow)\b', txt):
+            return 'Snow'
+        if re.search(r'\bsleet\b', txt):
+            return 'Sleet'
+        if re.search(r'\bhail\b', txt):
+            return 'Hail'
+        if re.search(r'\b(drizzle)\b', txt):
+            return 'Drizzle'
+        if re.search(r'\b(rain showers?|showers?)\b', txt):
+            return 'Rain'
+        if re.search(r'\brain\b', txt):
+            return 'Rain'
+        if re.search(r'\b(fog|mist)\b', txt):
+            return 'Fog / Mist'
+        if re.search(r'\bhaze\b', txt):
+            return 'Haze'
+        if re.search(r'\b(smoke)\b', txt):
+            return 'Smoke'
+        if re.search(r'\b(dust(storm)?|dust whirls?)\b', txt):
+            return 'Dust'
+        if re.search(r'\b(sand)\b', txt):
+            return 'Sand'
+        if re.search(r'\bsqualls?\b', txt):
+            return 'Squalls'
+        if re.search(r'\b(tornado|funnel cloud)\b', txt):
+            return 'Tornado'
+        if re.search(r'\bovercast\b', txt):
+            return 'Overcast'
+        if re.search(r'\b(scattered clouds|mostly cloudy|partly cloudy|cloudy)\b', txt):
+            return 'Cloudy'
+        if re.search(r'\b(clear|fair)\b', txt):
+            return 'Clear'
+        if re.search(r'\b(volcanic ash)\b', txt):
+            return 'Other'
+        return 'Other'
+```
+
+Finally, since less severe accidents were far more common than severe accidents in the dataset, we utilized random undersampling to get an even number of each Severity class. This ensured that the model could not simply learn to favor the majority classes, which would have produced deceptively high accuracy while failing to recognize the rarer, high-severity cases. By training on a balanced dataset, each severity level contributed equally to the learning process, improving the model’s ability to generalize and leading to a more meaningful and fair comparison across classes.
 
 All of this gave us a cleaner, more meaningful version of the dataset that better reflects real accident conditions and sets the groundwork for stronger modeling. Our dataset ended up with the following table headers:
 
@@ -79,6 +215,156 @@ Our goal in comparing these three models was to find the ideal balance between p
 
 To train our models, we utilized Sci-kit learn for random forest and xgboost, and tensorflow/keras for the neural network. Our train-test split was a stratified 70/30 split.
 
+#### Random Forest
+We started by first preprocessing the data and encoding our categorical variables
+```
+preprocessor = ColumnTransformer([
+    ('num', 'passthrough', numeric),
+    ('bool', 'passthrough', boolean),
+    ('cat', OneHotEncoder(handle_unknown='ignore', drop='first'), categorical)
+])
+```
+After a few tests, we settled on the following parameters by balancing training time and accuracy
+```
+rf = RandomForestClassifier(
+    # parameters chosen to minimize runtime
+    n_estimators=200,
+    max_depth=12,
+    min_samples_split=2,
+    min_samples_leaf=1,
+    n_jobs=-1,
+    random_state=1, 
+)
+
+model = Pipeline([
+    ('preprocess', preprocessor),
+    ('rf', rf)
+])
+```
+#### XGBoost
+Similar to our RandomForest model, we started with encoding our data. We had to make small adjustments to our classifications as our categories have ranges from 1-4 while XGBoost is 0-indexed. Our initial parameters were set based off a general baseline. 
+```
+import xgboost as xgb
+from sklearn.preprocessing import LabelEncoder
+
+# Encode target labels as XGBoost is 0-indexed while our data is 1-4
+le = LabelEncoder()
+y_enc = le.fit_transform(y)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y_enc, test_size=0.3, random_state=1, stratify=y_enc)
+
+xgb_model = Pipeline([
+    ('preprocess', preprocessor),
+    ('xgb', xgb.XGBClassifier(
+        n_estimators=200,
+        max_depth=6,
+        learning_rate=0.1, # perform hyper-parameter tuning to find optimal learning rate
+        subsample=0.8,
+        colsample_bytree=0.8,
+        
+        objective='multi:softmax',
+        num_class=4,
+        eval_metric='mlogloss',
+        random_state=42,
+        n_jobs=-1
+    ))
+])
+```
+#### Attention-based Neural Network
+For our neural network, we defined the following architecture:
+```
+from tensorflow import keras
+from tensorflow.keras import layers
+import tensorflow as tf
+
+class FeatureAttentionLayer(layers.Layer):
+    def __init__(self, attention_dim=64, **kwargs):
+        super(FeatureAttentionLayer, self).__init__(**kwargs)
+        self.attention_dim = attention_dim
+
+    def build(self, input_shape):
+        self.W = self.add_weight(
+            shape=(input_shape[-1], self.attention_dim),
+            initializer='glorot_uniform',
+            trainable=True,
+            name='W_attention'
+        )
+        self.b = self.add_weight(
+            shape=(self.attention_dim,),
+            initializer='zeros',
+            trainable=True,
+            name='b_attention'
+        )
+        self.u = self.add_weight(
+            shape=(self.attention_dim, 1),
+            initializer='glorot_uniform',
+            trainable=True,
+            name='u_attention'
+        )
+        super(FeatureAttentionLayer, self).build(input_shape)
+
+    def call(self, inputs):
+        # Compute attention scores
+        v = tf.tanh(tf.matmul(inputs, self.W) + self.b)
+        vu = tf.matmul(v, self.u)
+        alphas = tf.nn.softmax(vu, axis=1)
+        # Weighted sum of inputs
+        output = inputs * alphas
+        return output
+
+# Build attention model
+def build_attention_model(input_dim, num_classes=3, attention_dim=64):
+    
+    # Input
+    inputs = keras.Input(shape=(input_dim,), name='input_features')
+    
+    # Attention
+    attended = FeatureAttentionLayer(attention_dim=attention_dim, name='feature_attention')(inputs)
+    
+    # Dense layers
+    x = layers.Dense(128, activation='relu', name='dense1')(attended)
+    x = layers.BatchNormalization(name='bn1')(x)
+    x = layers.Dropout(0.3, name='dropout1')(x)
+    
+    x = layers.Dense(64, activation='relu', name='dense2')(x)
+    x = layers.BatchNormalization(name='bn2')(x)
+    x = layers.Dropout(0.3, name='dropout2')(x)
+    
+    x = layers.Dense(32, activation='relu', name='dense3')(x)
+    x = layers.BatchNormalization(name='bn3')(x)
+    x = layers.Dropout(0.2, name='dropout3')(x)
+    
+    # Output
+    outputs = layers.Dense(num_classes, activation='softmax', name='output')(x)
+    
+    # Create model
+    model = keras.Model(inputs=inputs, outputs=outputs, name='AttentionAccidentModel')
+    return model
+```
+We also decided to use the following model parameters: 
+```
+model = build_attention_model(
+    input_dim=X_train_scaled.shape[1],
+    num_classes=3,
+    attention_dim=64
+)
+
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    X_train_scaled, y_train,
+    validation_split=0.2,
+    epochs=50,
+    batch_size=256,
+    callbacks=training_callbacks,
+    verbose=1
+)
+```
 # Evaluation & Analysis: 
 To evaluate the models, we focused on macro-F1 score rather than accuracy. Accuracy treats all errors the same and can be misleading when the distribution of predicted classes is unbalanced or when certain types of mistakes are more harmful. In our context, failing to correctly identify a moderate or severe accident is much more costly than misclassifying a minor one. The macro-F1 score averages precision and recall for each class equally, so performance on the high-impact cases contributes just as much as the common ones. This provides a more honest assessment of real-world usefulness.
 
@@ -225,11 +511,57 @@ The parameter importance for f1-macro is show below. The most important paramete
 
 ![f1-macro parameter importance](https://github.com/randyf333/AI-ApplicationsProject/blob/main/visualizations/Screenshot%202025-12-09%20154949.png)
 
+For the final model, we used 5-fold cross-validation to test different hyperparameter values to identify the most optimal values of the top 3 most impactful. 
+```
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message="Found unknown categories in",
+)
+
+xgb_clf = XGBClassifier(
+    objective="multi:softprob",
+    num_class=4,              # severity 1 to 4
+    eval_metric="mlogloss",
+    random_state=1,
+    n_estimators=300,
+    tree_method="hist"        # good default on modern CPUs
+)
+
+xgb_pipeline = Pipeline(steps=[
+    ("preprocess", preprocessor),
+    ("xgb", xgb_clf)
+])
+
+# top three most impactful parameters according to sweep: max depth, gamma, and subsample
+param_grid = {
+    "xgb__max_depth":   [3, 5, 7],
+    "xgb__gamma":       [0, 0.5, 1.0],
+    "xgb__subsample":   [0.7, 0.85, 1.0],
+}
+
+# set up stratified K fold CV
+cv = StratifiedKFold(
+    n_splits=5,
+    shuffle=True,
+    random_state=1
+)
+
+# grid search with K fold CV
+grid_search = GridSearchCV(
+    estimator=xgb_pipeline,
+    param_grid=param_grid,
+    scoring="f1_macro",   # main metric
+    cv=cv,
+    n_jobs=-1,
+    verbose=2
+)
+```
 Combining a GridSearch and sweep, we ended up with the final model results:\
 Best params: {'xgb__gamma': 0.5, 'xgb__max_depth': 7, 'xgb__subsample': 0.7}\
 Best CV macro F1: 0.7132117427623111\
 Test macro F1: 0.7146090213946625
-
 Classification report:
                precision    recall  f1-score   support
 
