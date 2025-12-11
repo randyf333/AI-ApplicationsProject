@@ -121,11 +121,11 @@ Below is a summary of each of the models and their performance:
 |----------------|----------|
 | XGBoost        | 0.71     |
 | Attention NN   | 0.6124   |
-| Random Forest  | 0.555    |
+| Random Forest  | 0.52     |
 
 1. XGBoost Results:
 
-XGBoost Model F1-Score: 0.7094
+XGBoost Macro f1: 0.7078
 
 XGBoost Classification Report:
                precision    recall  f1-score   support
@@ -144,32 +144,51 @@ XGBoost Confusion Matrix:\
  [[16116  1859  1411   823]\
  [ 2836 11830  3153  2390]\
  [  879  1533 15598  2199]\
- [  779  1699  3931 13799]]
+ [  779  1699  3931 13799]]\
+Training took 16.32 seconds
    
-2. Attention Neural Network Results:
+2. Attention Neural Network Results
+```
+MODEL EVALUATION
 
-Test macro F1: 0.7146090213946625
+1. Making predictions on test set...
 
-Classification report:
-               precision    recall  f1-score   support
+OVERALL METRICS:
+   Accuracy:  0.7864
+   Precision: 0.7766 (macro)
+   Recall:    0.7446 (macro)
+   F1-Score:  0.7543 (macro)
 
-           0       0.79      0.82      0.80     20209
-           1       0.70      0.59      0.64     20209
-           2       0.66      0.76      0.71     20209
-           3       0.72      0.70      0.71     20208
+PER-CLASS METRICS:
 
-    accuracy                           0.72     80835
-    macro avg       0.72      0.72      0.71     80835
-    weighted avg       0.72      0.72      0.71     80835
+   Minor:
+      Precision: 0.7933
+      Recall:    0.7805
+      F1-Score:  0.7868
+      Support:   20,209
 
-Confusion matrix:\
- [[16475  1787  1221   726]\
- [ 2751 12000  3041  2417]\
- [  897  1660 15354  2298]\
- [  763  1748  3631 14066]]
+   Moderate:
+      Precision: 0.7374
+      Recall:    0.5414
+      F1-Score:  0.6244
+      Support:   20,209
 
+   Severe:
+      Precision: 0.7991
+      Recall:    0.9118
+      F1-Score:  0.8518
+      Support:   40,417
+
+CONFUSION MATRIX:
+   (Rows = True, Columns = Predicted)
+
+                     Minor   Moderate     Severe
+   Minor            15,773      1,683      2,753
+   Moderate          2,758     10,942      6,509
+   Severe            1,353      2,213     36,851
+```
 3. Random Forest Results: 
-Macro-f1: 0.52
+Macro f1: 0.5174
 
 Classification Report:
                precision    recall  f1-score   support
@@ -183,11 +202,13 @@ Classification Report:
     macro avg       0.57      0.55      0.52     80835
     weighted avg       0.57      0.55      0.52     80835
 
+
 Confusion Matrix:\
  [[13555  1014  2641  2999]\
  [ 6525  3425  6261  3998]\
  [ 1888   283 16460  1578]\
- [ 2108   569  6448 11083]]
+ [ 2108   569  6448 11083]]\
+Training took 2.29 seconds
 
 Also, the attention model required roughly 20–30 times more computation than XGBoost for a nearly identical macro-F1 score. On consumer hardware, such differences matter. Parameter sweeps, re-training, and real-time deployment all become more feasible when runtime is measured in seconds rather than minutes. For this reason, we chose XGBoost as the final model.
 
