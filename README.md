@@ -100,8 +100,9 @@ Each model learned somewhat different patterns about what drives accident severi
 Several patterns stand out across models:
 
 1. Spatial accident history is the strongest signal. Both gradient-boosted trees placed cell-level metrics at the top:
-+ `cell1_mean_sev` (average severity of nearby accidents)
-+ `cell1_count` (volume of nearby accidents)
+    + `cell1_mean_sev` (average severity of nearby accidents)
+    + `cell1_count` (volume of nearby accidents)
+
 This suggests accident severity is highly localized. Places where severe crashes have happened before tend to produce severe crashes again, likely due to infrastructure design, traffic flow, or visibility constraints.
 
 2. Local density features matter. KDE-based features, such as `kde_density_m2` and `kde_grid_count`, were repeatedly ranked in the top positions. These variables summarize how concentrated recent crashes are, which again reflects the importance of spatial clustering.
@@ -228,7 +229,6 @@ Confusion matrix:\
 
 Even with parameter sweeps and cross-validation to find the best parameters, we saw little to no improvement in our accuracy or f1 score. These results indicate to us that our current features may not carry enough predictive power to increase our prediction accuracy. More feature engineering or more data may be required to improve the performance of our model. 
 
-### Final Model
 
 # Related Work
 We referenced the following sources:
