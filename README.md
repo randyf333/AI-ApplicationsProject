@@ -250,10 +250,9 @@ Tools Utilized
 + PyTorch
 
 # Conclusion
-Notes
-+ summary and wrap up
-+ real world impact and applications
-+ deployment feasability
+Through this project, we were able to explore how different environmental, temporal, and spatial factors contribute to the severity of car accidents. By testing multiple machine learning models, we gained a better understanding of what types of algorithms work best for this kind of structured, real world data. The consistent finding across all models is that severity is strongly tied to location based patterns: areas with dense accident histories or specific high risk grid cells produce more severe outcomes. Weather and intersection structure provide additional signals as well.
 
-Through this project, we were able to explore how different environmental, temporal, and spatial factors contribute to the severity of car accidents. By testing multiple machine learning models, we gained a better understanding of what types of algorithms work best for this kind of structured, real world data.
+XGBoost offered the best overall balance of accuracy, interpretability, and computational efficiency, reaching a macro F1 of ~0.71 while training in seconds. While a more advanced model like the neural network performed better, XGBoost is suitable for large scale deployment without requiring highly advanced resources. The true cap performance we observed suggests that additional predictive power will likely come from new data sources rather than more complex models. Examples of data that could improve results include traffic flow data, lighting conditions, or various types of driver behavior data.
+
+In conclusion, our results can be used both as a predictive engine, able to be used by city governments or navigation apps, as well as a data analysis project that can be examined for what features likely correlate the highest to severe accidents, to ultimately save drivers time from sitting in traffic or taking long detours, or potentially saving their lives.
 
