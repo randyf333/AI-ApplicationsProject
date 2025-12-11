@@ -1,4 +1,4 @@
-# Predicting Car Accident Severity
+<img width="615" height="602" alt="image" src="https://github.com/user-attachments/assets/c6a35ec1-c91c-409a-88fc-a9398b391d35" /># Predicting Car Accident Severity
 AI project for Hanyang ITE3051
 
 Gavin Pryor, Department of Financial Management, gavin.anaiah@gmail.com <br>
@@ -183,8 +183,6 @@ Classification Report:
     macro avg       0.57      0.55      0.52     80835
     weighted avg       0.57      0.55      0.52     80835
 
-<img width="619" height="598" alt="Screenshot 2025-12-11 at 9 57 54 AM" src="https://github.com/user-attachments/assets/1fde1864-56a0-4ef7-9531-aa8b35ce4e8e" />
-
 Confusion Matrix:\
  [[13555  1014  2641  2999]\
  [ 6525  3425  6261  3998]\
@@ -222,14 +220,13 @@ Classification report:
     macro avg       0.72      0.72      0.71     80835
     weighted avg       0.72      0.72      0.71     80835
 
-Confusion matrix:\
- [[16475  1787  1221   726]\
- [ 2751 12000  3041  2417]\
- [  897  1660 15354  2298]\
- [  763  1748  3631 14066]]
+<img width="619" height="598" alt="Screenshot 2025-12-11 at 9 57 54 AM" src="https://github.com/user-attachments/assets/1cd7adde-11e1-42b1-9380-34335048481f" />
 
 Even with parameter sweeps and cross-validation to find the best parameters, we saw little to no improvement in our accuracy or f1 score. These results indicate to us that our current features may not carry enough predictive power to increase our prediction accuracy. More feature engineering or more data may be required to improve the performance of our model. 
 
+<img width="819" height="590" alt="Screenshot 2025-12-11 at 10 01 05 AM" src="https://github.com/user-attachments/assets/b6ace7e2-f7cc-4999-b5d6-0f160df6340b" />
+
+For feature importance, the big spatial signals stayed the same, but the important change in this final model is that it now relies on specific high risk grid cells rather than just broad spatial features. Encoded cell IDs like cat__cell_1km_-2053_1728 and cat__cell_5km_-153_374 jumped into the top ranks, showing the model has learned precise geographic hotspots instead of general patterns. Weather features dropped in importance and became more selective. Only a few strong indicators remain, meaning the model filtered out noisy categories and kept the ones that consistently correlate with severity. Intersection indicators like traffic signals and crossings are still helpful but got pushed lower because the detailed spatial encodings explain risk even better on their own. Overall, the final model shifted from general trends to high resolution spatial detail, which is a sign of a more mature feature pipeline and a more confident model.
 
 # Related Work
 We referenced the following sources:
